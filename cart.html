@@ -72,6 +72,11 @@
             <h2>Оформление заказа</h2>
             <div id="orderForm">
                 <div class="form-group">
+                    <label>Доставить в какой мир?</label>
+                    <input type="text" id="world" placeholder="Название мира">
+                    <div class="error" id="worldError">Укажите мир доставки</div>
+                </div>
+                <div class="form-group">
                     <label>Ваш ник в Minecraft</label>
                     <input type="text" id="nickname" placeholder="Не менее 4 символов (A-Z, 0-9)">
                     <div class="error" id="nickError">Ник должен содержать только латинские буквы и цифры, минимум 4 символа</div>
@@ -116,6 +121,7 @@
         const cartContainer = document.getElementById('cartItems');
         const summaryEl = document.getElementById('summary');
         const orderFormContainer = document.getElementById('orderFormContainer');
+        const worldInput = document.getElementById('world');
         const nickInput = document.getElementById('nickname');
         const coordsInput = document.getElementById('coords');
         const fileInput = document.getElementById('screenshot');
@@ -187,20 +193,31 @@
 
         function validate() {
             let valid = true;
+            // Проверка мира
+            const worldErr = document.getElementById('worldError');
+            if (worldInput.value.trim().length === 0) {
+                worldErr.style.display = 'block';
+                valid = false;
+            } else {
+                worldErr.style.display = 'none';
+            }
+
             document.getElementById('nickError').style.display = nickRegex.test(nickInput.value.trim()) ? 'none' : 'block';
             document.getElementById('coordError').style.display = coordRegex.test(coordsInput.value.trim()) ? 'none' : 'block';
             document.getElementById('fileError').style.display = (fileInput.files.length && fileInput.files[0].type.startsWith('image/')) ? 'none' : 'block';
-            if (!nickRegex.test(nickInput.value.trim()) || !coordRegex.test(coordsInput.value.trim()) || !fileInput.files.length) valid = false;
+
+            if (!nickRegex.test(nickInput.value.trim()) || !coordRegex.test(coordsInput.value.trim()) || !fileInput.files.length || worldInput.value.trim().length === 0) valid = false;
             submitBtn.disabled = !valid;
         }
 
+        worldInput.addEventListener('input', validate);
         nickInput.addEventListener('input', validate);
         coordsInput.addEventListener('input', validate);
         fileInput.addEventListener('change', validate);
         validate();
 
         submitBtn.addEventListener('click', async () => {
-            if (!nickRegex.test(nickInput.value.trim()) || !coordRegex.test(coordsInput.value.trim()) || !fileInput.files.length) return;
+            if (!nickRegex.test(nickInput.value.trim()) || !coordRegex.test(coordsInput.value.trim()) || !fileInput.files.length || worldInput.value.trim().length === 0) return;
             submitBtn.disabled = true;
             submitBtn.textContent = 'Отправка...';
             try {
@@ -214,6 +231,7 @@
                     title: '🛒 Новый заказ!',
                     color: 0x005bff,
                     fields: [
+                        { name: 'Мир', value: worldInput.value.trim(), inline: false },
                         { name: 'Товары', value: itemsList, inline: false },
                         { name: 'Общая сумма', value: `${total} АР`, inline: false },
                         { name: 'Ник', value: `\`${nickInput.value.trim()}\``, inline: true },
