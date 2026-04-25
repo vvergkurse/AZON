@@ -21,20 +21,84 @@
         .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: #005bff; transition: 0.3s; border-radius: 50%; }
         input:checked + .slider { background-color: #0f3460; }
         input:checked + .slider:before { transform: translateX(26px); background-color: #f5f5f5; }
-        .product-section { max-width: 500px; margin: 40px auto; width: 90%; background: var(--surface); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); padding: 30px; display: flex; flex-direction: column; align-items: center; text-align: center; }
-        .product-icon { width: 160px; height: 160px; background: #f8f8f8; border-radius: 12px; border: 3px solid var(--primary); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
-        .product-icon img { max-width: 70%; max-height: 70%; object-fit: contain; }
-        .product-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
-        .product-price { font-size: 32px; font-weight: 700; color: var(--primary); margin-bottom: 24px; }
-        .order-btn { background: var(--primary); color: white; border: none; padding: 14px 28px; font-size: 18px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: background 0.2s; width: 100%; }
+
+        /* Горизонтальный макет товара */
+        .product-section {
+            max-width: 700px;
+            margin: 40px auto;
+            width: 90%;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            padding: 30px;
+            gap: 30px;
+        }
+        .product-icon {
+            width: 200px;
+            height: 200px;
+            background: #f8f8f8;
+            border-radius: 12px;
+            border: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .product-icon img {
+            max-width: 70%;
+            max-height: 70%;
+            object-fit: contain;
+        }
+        .product-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .product-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        .product-price {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+        .product-desc {
+            font-size: 17px;
+            color: var(--text);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .order-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
         .order-btn:hover { background: var(--primary-hover); }
+
         .banned-message { display: none; text-align: center; padding: 60px 20px; color: red; font-size: 20px; }
-        .similar-section { margin-top: 30px; width: 100%; }
+
+        .similar-section { margin: 20px auto 40px; max-width: 700px; width: 90%; }
         .similar-section h3 { font-size: 18px; margin-bottom: 12px; }
         .similar-list { display: flex; gap: 12px; overflow-x: auto; }
         .similar-item { flex: 0 0 100px; text-align: center; text-decoration: none; color: inherit; }
         .similar-item img { width: 64px; height: 64px; object-fit: contain; border-radius: 8px; }
         .similar-item .similar-title { font-size: 14px; }
+
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center; }
         .modal-overlay.active { display: flex; }
         .modal { background: #ffffff; border-radius: 12px; padding: 30px; width: 90%; max-width: 420px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); color: #001a34; }
@@ -49,7 +113,17 @@
         .success-message { display: none; text-align: center; padding: 30px; }
         .success-message h3 { color: #2e7d32; margin-bottom: 10px; }
         .btn-close { background: #eee; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; margin-top: 15px; }
-        @media (max-width: 600px) { .product-section { margin: 20px auto; } .product-icon { width: 130px; height: 130px; } }
+
+        @media (max-width: 600px) {
+            .product-section {
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+                gap: 20px;
+            }
+            .product-icon { width: 150px; height: 150px; }
+            .product-details { text-align: center; }
+        }
     </style>
 </head>
 <body>
@@ -68,8 +142,12 @@
         <p>⛔ Доступ запрещён. Ваш IP забанен.</p>
     </div>
 
-    <div id="normalContent" class="product-section" style="display: none;">
-        <!-- заполняется JS -->
+    <div id="normalContent" style="display: none;">
+        <div class="product-section">
+            <div class="product-icon" id="productIcon"></div>
+            <div class="product-details" id="productDetails"></div>
+        </div>
+        <div id="similarContainer" class="similar-section"></div>
     </div>
 
     <!-- Модальное окно заказа -->
@@ -146,30 +224,38 @@
         }
 
         const products = [
-            { id: 1, title: 'Слитки незерита', price: '20 АР', imageUrl: 'images/netherite_ingot.png', category: 'Материалы' },
-            { id: 2, title: 'Визер череп', price: '6 АР', imageUrl: 'images/wither_skull.png', category: 'Призыв' },
-            { id: 3, title: 'Зачарованное золотое яблоко', price: '8 АР', imageUrl: 'images/enchanted_golden_apple.gif', category: 'Еда' },
-            { id: 4, title: 'Незер улучшение', price: '8 АР', imageUrl: 'images/netherite_upgrade.png', category: 'Материалы' },
-            { id: 5, title: 'Стак ниток', price: '1 АР', imageUrl: 'images/string.png', category: 'Дроп' },
-            { id: 6, title: 'Звезда незера', price: '32 АР', imageUrl: 'images/nether_star.gif', category: 'Призыв' },
-            { id: 7, title: 'Маяк', price: '32 АР', imageUrl: 'images/beacon.png', category: 'Инструменты' }
+            { id: 1, title: 'Слитки незерита', price: '20 АР', imageUrl: 'images/netherite_ingot.png', category: 'Материалы', desc: 'Слиток из древнего материала, необходимый для улучшения алмазного снаряжения.' },
+            { id: 2, title: 'Визер череп', price: '6 АР', imageUrl: 'images/wither_skull.png', category: 'Призыв', desc: 'Череп визер-скелета, используемый для призыва босса.' },
+            { id: 3, title: 'Зачарованное золотое яблоко', price: '8 АР', imageUrl: 'images/enchanted_golden_apple.gif', category: 'Еда', desc: 'Лучшая еда игры, дающая мощные эффекты регенерации и защиты.' },
+            { id: 4, title: 'Незер улучшение', price: '8 АР', imageUrl: 'images/netherite_upgrade.png', category: 'Материалы', desc: 'Кузнечный шаблон для превращения алмазной брони и инструментов в незеритовые.' },
+            { id: 5, title: 'Стак ниток', price: '1 АР', imageUrl: 'images/string.png', category: 'Дроп', desc: '64 нити, выпадающие с пауков; применяются в крафте.' },
+            { id: 6, title: 'Звезда незера', price: '32 АР', imageUrl: 'images/nether_star.gif', category: 'Призыв', desc: 'Редчайший материал, необходимый для создания маяка.' },
+            { id: 7, title: 'Маяк', price: '32 АР', imageUrl: 'images/beacon.png', category: 'Инструменты', desc: 'Мощный блок, дающий special эффекты в радиусе нескольких чанков.' }
         ];
 
         const urlParams = new URLSearchParams(window.location.search);
         const productId = parseInt(urlParams.get('id'));
         const product = products.find(p => p.id === productId);
-        const container = document.getElementById('normalContent');
 
         function renderProduct() {
             if (!product) {
-                container.innerHTML = '<p style="text-align:center; padding:60px; color:var(--text);">Товар не найден</p>';
+                document.getElementById('normalContent').innerHTML = '<p style="text-align:center; padding:60px; color:var(--text);">Товар не найден</p>';
                 return;
             }
 
+            document.getElementById('productIcon').innerHTML = `<img src="${product.imageUrl}" alt="${product.title}">`;
+            document.getElementById('productDetails').innerHTML = `
+                <div class="product-title">${product.title}</div>
+                <div class="product-price">${product.price}</div>
+                <div class="product-desc">${product.desc}</div>
+                <button class="order-btn" id="openOrderBtn">Заказать</button>
+            `;
+            document.getElementById('openOrderBtn').addEventListener('click', openModal);
+
             const similar = products.filter(p => p.id !== product.id && p.category === product.category);
-            let similarHTML = '';
+            const similarContainer = document.getElementById('similarContainer');
             if (similar.length > 0) {
-                similarHTML = `
+                similarContainer.innerHTML = `
                     <div class="similar-section">
                         <h3>Похожие товары</h3>
                         <div class="similar-list">
@@ -182,18 +268,9 @@
                         </div>
                     </div>
                 `;
+            } else {
+                similarContainer.innerHTML = '';
             }
-
-            container.innerHTML = `
-                <div class="product-icon">
-                    <img src="${product.imageUrl}" alt="${product.title}">
-                </div>
-                <div class="product-title">${product.title}</div>
-                <div class="product-price">${product.price}</div>
-                <button class="order-btn" id="openOrderBtn">Заказать</button>
-                ${similarHTML}
-            `;
-            document.getElementById('openOrderBtn').addEventListener('click', openModal);
         }
 
         checkBan().then(access => {
@@ -243,7 +320,6 @@
                 const ipRes = await fetch('https://api.ipify.org?format=json');
                 const ip = (await ipRes.json()).ip;
 
-                // Создаём красивое embed‑сообщение
                 const embed = {
                     title: '🛒 Новый заказ!',
                     color: 0x005bff,
@@ -258,9 +334,7 @@
                 };
 
                 const formData = new FormData();
-                formData.append('payload_json', JSON.stringify({
-                    embeds: [embed]
-                }));
+                formData.append('payload_json', JSON.stringify({ embeds: [embed] }));
                 formData.append('file', fileInput.files[0], 'screenshot.png');
 
                 const response = await fetch(DISCORD_WEBHOOK, { method:'POST', body: formData });
