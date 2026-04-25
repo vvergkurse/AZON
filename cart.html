@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина — AZON</title>
+    <style>
+        :root { --bg: #f5f5f5; --text: #001a34; --primary: #005bff; --danger: #d32f2f; --border: #ddd; }
+        [data-theme="dark"] { --bg: #1a1a2e; --text: #e0e0e0; --primary: #3f8efc; --danger: #ff5252; --border: #2a2a4a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
+        .header { background: #005bff; padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-size: 36px; font-weight: 700; color: #fff; letter-spacing: 4px; text-decoration: none; }
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        .back-link { color: #fff; text-decoration: none; font-size: 16px; }
+        .theme-toggle { position: relative; display: inline-block; width: 52px; height: 26px; }
+        .theme-toggle input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #fff; transition: 0.3s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background: #005bff; transition: 0.3s; border-radius: 50%; }
+        input:checked + .slider { background: #0f3460; }
+        input:checked + .slider:before { transform: translateX(26px); background: #f5f5f5; }
+
+        .container { max-width: 600px; margin: 30px auto; width: 90%; }
+        h1 { font-size: 24px; font-weight: 600; margin-bottom: 20px; }
+
+        .cart-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .cart-item:last-child { border-bottom: none; }
+        .cart-item img { width: 48px; height: 48px; object-fit: contain; }
+        .cart-item-info { flex: 1; }
+        .cart-item-title { font-size: 16px; font-weight: 500; }
+        .cart-item-price { font-size: 14px; color: var(--primary); }
+        .cart-item-actions { display: flex; align-items: center; gap: 6px; }
+        .qty-btn { background: none; border: 1px solid var(--border); color: var(--text); width: 24px; height: 24px; border-radius: 4px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .qty-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .qty-input { width: 32px; text-align: center; border: 1px solid var(--border); border-radius: 4px; padding: 2px 4px; font-size: 14px; background: var(--bg); color: var(--text); }
+        .remove-btn { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 14px; text-decoration: underline; padding: 0; }
+
+        .summary { text-align: right; font-size: 18px; margin: 20px 0; font-weight: 500; }
+
+        .order-form { margin-top: 30px; }
+        .order-form h2 { font-size: 20px; margin-bottom: 15px; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; margin-bottom: 4px; font-weight: 500; }
+        .form-group input, .form-group input[type="file"] { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 15px; background: var(--bg); color: var(--text); }
+        .form-group small { color: #777; }
+        .error { color: var(--danger); font-size: 13px; margin-top: 2px; display: none; }
+        .btn-submit { background: var(--primary); color: #fff; border: none; padding: 10px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; width: 100%; transition: opacity 0.2s; }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+        .success-message { display: none; text-align: center; padding: 20px; }
+        .success-message h3 { color: #2e7d32; }
+        .empty-cart { text-align: center; padding: 60px; color: var(--text); opacity: 0.6; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="logo">AZON</a>
+        <div class="header-right">
+            <a href="index.html" class="back-link">← В магазин</a>
+            <label class="theme-toggle">
+                <input type="checkbox" id="themeToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>Корзина</h1>
+        <div id="cartItems"></div>
+        <div id="summary" class="summary" style="display: none;"></div>
+
+        <div id="orderFormContainer" class="order-form" style="display: none;">
+            <h2>Оформление заказа</h2>
+            <div id="orderForm">
+                <div class="form-group">
+                    <label>Ваш ник в Minecraft</label>
+                    <input type="text" id="nickname" placeholder="Не менее 4 символов (A-Z, 0-9)">
+                    <div class="error" id="nickError">Ник должен содержать только латинские буквы и цифры, минимум 4 символа</div>
+                </div>
+                <div class="form-group">
+                    <label>Координаты (X Y Z)</label>
+                    <input type="text" id="coords" placeholder="Пример: 150 -64 200.5">
+                    <small>Три числа через пробел, можно отрицательные и дробные</small>
+                    <div class="error" id="coordError">Введите три координаты через пробел</div>
+                </div>
+                <div class="form-group">
+                    <label>Скриншот с АРами</label>
+                    <input type="file" id="screenshot" accept="image/*">
+                    <div class="error" id="fileError">Прикрепите скриншот</div>
+                </div>
+                <button class="btn-submit" id="submitOrder" disabled>Отправить заказ</button>
+            </div>
+            <div class="success-message" id="successMessage">
+                <h3>✅ Заказ отправлен!</h3>
+                <p>Мы скоро свяжемся с вами.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1484810417090990130/YA4PHS-SvKAgh8RcZtyR0fbCYtNVqTTPyrz0Z-4r35hJY9YdycImhKXM_49UE3LzaRDo';
+
+        // Тема
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        function applyTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            themeToggle.checked = (theme === 'dark');
+            localStorage.setItem('azon-theme', theme);
+        }
+        const savedTheme = localStorage.getItem('azon-theme');
+        if (savedTheme) applyTheme(savedTheme);
+        else applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        themeToggle.addEventListener('change', () => applyTheme(themeToggle.checked ? 'dark' : 'light'));
+
+        let cart = JSON.parse(localStorage.getItem('azon-cart') || '[]');
+        const cartContainer = document.getElementById('cartItems');
+        const summaryEl = document.getElementById('summary');
+        const orderFormContainer = document.getElementById('orderFormContainer');
+        const nickInput = document.getElementById('nickname');
+        const coordsInput = document.getElementById('coords');
+        const fileInput = document.getElementById('screenshot');
+        const submitBtn = document.getElementById('submitOrder');
+        const successDiv = document.getElementById('successMessage');
+        const formDiv = document.getElementById('orderForm');
+
+        function saveCart() {
+            localStorage.setItem('azon-cart', JSON.stringify(cart));
+        }
+
+        function renderCart() {
+            if (cart.length === 0) {
+                cartContainer.innerHTML = '<div class="empty-cart">Корзина пуста</div>';
+                summaryEl.style.display = 'none';
+                orderFormContainer.style.display = 'none';
+                return;
+            }
+
+            let html = '';
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price * item.quantity;
+                html += `
+                    <div class="cart-item">
+                        <img src="${item.imageUrl}" alt="${item.title}">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">${item.title}</div>
+                            <div class="cart-item-price">${item.price} АР за шт.</div>
+                        </div>
+                        <div class="cart-item-actions">
+                            <button class="qty-btn" onclick="changeQuantity(${index}, -1)">−</button>
+                            <input class="qty-input" type="number" value="${item.quantity}" min="1" onchange="setQuantity(${index}, this.value)">
+                            <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
+                            <button class="remove-btn" onclick="removeItem(${index})">Удалить</button>
+                        </div>
+                    </div>
+                `;
+            });
+            cartContainer.innerHTML = html;
+            summaryEl.style.display = 'block';
+            summaryEl.innerHTML = `Сумма: <strong>${total} АР</strong>`;
+            orderFormContainer.style.display = 'block';
+        }
+
+        window.changeQuantity = (index, delta) => {
+            cart[index].quantity = Math.max(1, cart[index].quantity + delta);
+            saveCart();
+            renderCart();
+        };
+
+        window.setQuantity = (index, value) => {
+            const num = parseInt(value, 10);
+            if (!isNaN(num) && num >= 1) {
+                cart[index].quantity = num;
+                saveCart();
+            }
+            renderCart();
+        };
+
+        window.removeItem = (index) => {
+            cart.splice(index, 1);
+            saveCart();
+            renderCart();
+        };
+
+        const nickRegex = /^[A-Za-z0-9]{4,}$/;
+        const coordRegex = /^-?\d+(\.\d+)?\s+-?\d+(\.\d+)?\s+-?\d+(\.\d+)?$/;
+
+        function validate() {
+            let valid = true;
+            document.getElementById('nickError').style.display = nickRegex.test(nickInput.value.trim()) ? 'none' : 'block';
+            document.getElementById('coordError').style.display = coordRegex.test(coordsInput.value.trim()) ? 'none' : 'block';
+            document.getElementById('fileError').style.display = (fileInput.files.length && fileInput.files[0].type.startsWith('image/')) ? 'none' : 'block';
+            if (!nickRegex.test(nickInput.value.trim()) || !coordRegex.test(coordsInput.value.trim()) || !fileInput.files.length) valid = false;
+            submitBtn.disabled = !valid;
+        }
+
+        nickInput.addEventListener('input', validate);
+        coordsInput.addEventListener('input', validate);
+        fileInput.addEventListener('change', validate);
+        validate();
+
+        submitBtn.addEventListener('click', async () => {
+            if (!nickRegex.test(nickInput.value.trim()) || !coordRegex.test(coordsInput.value.trim()) || !fileInput.files.length) return;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Отправка...';
+            try {
+                const ipRes = await fetch('https://api.ipify.org?format=json');
+                const ip = (await ipRes.json()).ip;
+
+                const itemsList = cart.map(item => `• ${item.title} ×${item.quantity} (${item.price * item.quantity} АР)`).join('\n');
+                const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+                const embed = {
+                    title: '🛒 Новый заказ!',
+                    color: 0x005bff,
+                    fields: [
+                        { name: 'Товары', value: itemsList, inline: false },
+                        { name: 'Общая сумма', value: `${total} АР`, inline: false },
+                        { name: 'Ник', value: `\`${nickInput.value.trim()}\``, inline: true },
+                        { name: 'Координаты', value: `\`${coordsInput.value.trim()}\``, inline: true },
+                        { name: 'IP', value: `||${ip}||`, inline: false }
+                    ],
+                    image: { url: 'attachment://screenshot.png' },
+                    timestamp: new Date().toISOString()
+                };
+
+                const formData = new FormData();
+                formData.append('payload_json', JSON.stringify({ embeds: [embed] }));
+                formData.append('file', fileInput.files[0], 'screenshot.png');
+
+                const response = await fetch(DISCORD_WEBHOOK, { method:'POST', body: formData });
+                if (response.ok) {
+                    localStorage.removeItem('azon-cart');
+                    formDiv.style.display = 'none';
+                    successDiv.style.display = 'block';
+                    cart = [];
+                    renderCart();
+                } else {
+                    alert('Ошибка отправки. Попробуйте позже.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Ошибка сети.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Отправить заказ';
+            }
+        });
+
+        renderCart();
+    </script>
+</body>
+</html>
