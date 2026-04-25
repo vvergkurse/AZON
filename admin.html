@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZON — Админ-панель</title>
+    <style>
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #001a34; max-width: 500px; margin: 60px auto; padding: 20px; }
+        h1 { font-size: 28px; }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 10px; margin-top: 5px; font-size: 16px; }
+        button { background: #005bff; color: white; border: none; padding: 12px 25px; font-size: 16px; border-radius: 5px; cursor: pointer; margin-top: 15px; }
+        button:hover { background: #0047cc; }
+        .hidden { display: none; }
+        #errorMessage { color: red; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Управление банами</h1>
+    <div id="loginSection">
+        <label for="passwordInput">Введите пароль администратора</label>
+        <input type="password" id="passwordInput" placeholder="пароль">
+        <button onclick="login()">Войти</button>
+        <div id="errorMessage"></div>
+    </div>
+    <div id="adminSection" class="hidden">
+        <label for="ipInput">IP-адрес для бана</label>
+        <input type="text" id="ipInput" placeholder="123.45.67.89">
+        <button onclick="addIP()">Добавить</button>
+        <button onclick="removeIP()" style="background:#c0392b;">Удалить выбранный</button>
+        <label style="margin-top:20px;">Текущий список банов</label>
+        <textarea id="bansList" rows="8" readonly></textarea>
+        <button onclick="downloadJSON()">Скачать bans.json</button>
+        <p style="font-size:14px; color:gray;">После скачивания замените файл bans.json в репозитории.</p>
+    </div>
+
+    <script>
+        // Пароль установлен
+        const ADMIN_PASSWORD = 'XOuch95TheBest123321';
+        let bannedIPs = [];
+
+        async function loadCurrentBans() {
+            try {
+                const response = await fetch('bans.json');
+                if (response.ok) bannedIPs = await response.json();
+                else bannedIPs = [];
+                updateList();
+            } catch (e) {
+                bannedIPs = [];
+                updateList();
+            }
+        }
+
+        function updateList() {
+            document.getElementById('bansList').value = bannedIPs.join('\n');
+        }
+
+        function login() {
+            const pass = document.getElementById('passwordInput').value;
+            if (pass === ADMIN_PASSWORD) {
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('adminSection').classList.remove('hidden');
+                document.getElementById('errorMessage').innerText = '';
+                loadCurrentBans();
+            } else {
+                document.getElementById('errorMessage').innerText = 'Неверный пароль';
+            }
+        }
+
+        function addIP() {
+            const ip = document.getElementById('ipInput').value.trim();
+            if (!ip) return alert('Введите IP');
+            if (!bannedIPs.includes(ip)) {
+                bannedIPs.push(ip);
+                updateList();
+            }
+            document.getElementById('ipInput').value = '';
+        }
+
+        function removeIP() {
+            const selectedText = document.getElementById('bansList').value.trim();
+            if (!selectedText) return alert('Выберите IP для удаления, скопировав его из списка в поле ввода');
+            const ipToRemove = selectedText.split('\n')[0].trim();
+            if (!ipToRemove) return;
+            const index = bannedIPs.indexOf(ipToRemove);
+            if (index > -1) {
+                bannedIPs.splice(index, 1);
+                updateList();
+            } else {
+                alert('IP не найден в списке. Убедитесь, что он точно есть.');
+            }
+        }
+
+        function downloadJSON() {
+            const blob = new Blob([JSON.stringify(bannedIPs, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'bans.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
