@@ -22,10 +22,9 @@
         input:checked + .slider { background-color: #0f3460; }
         input:checked + .slider:before { transform: translateX(26px); background-color: #f5f5f5; }
 
-        /* Горизонтальный макет товара */
         .product-section {
             max-width: 700px;
-            margin: 40px auto;
+            margin: 40px auto 20px;
             width: 90%;
             background: var(--surface);
             border-radius: 12px;
@@ -47,35 +46,11 @@
             justify-content: center;
             flex-shrink: 0;
         }
-        .product-icon img {
-            max-width: 70%;
-            max-height: 70%;
-            object-fit: contain;
-        }
-        .product-details {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .product-title {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--text);
-        }
-        .product-price {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 12px;
-        }
-        .product-desc {
-            font-size: 17px;
-            color: var(--text);
-            line-height: 1.6;
-            margin-bottom: 24px;
-        }
+        .product-icon img { max-width: 70%; max-height: 70%; object-fit: contain; }
+        .product-details { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .product-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+        .product-price { font-size: 32px; font-weight: 700; color: var(--primary); margin-bottom: 12px; }
+        .product-desc { font-size: 17px; color: var(--text); line-height: 1.6; margin-bottom: 24px; }
         .order-btn {
             background: var(--primary);
             color: white;
@@ -90,29 +65,55 @@
         }
         .order-btn:hover { background: var(--primary-hover); }
 
+        /* Форма заказа (изначально скрыта) */
+        .order-form-container {
+            max-width: 700px;
+            margin: 0 auto 20px;
+            width: 90%;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 30px;
+            display: none;
+        }
+        .order-form-container.active { display: block; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; }
+        .form-group input, .form-group input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            background: #fff;
+            color: #001a34;
+        }
+        .form-group small { color: #777; }
+        .error { color: #d32f2f; font-size: 14px; margin-top: 4px; display: none; }
+        .btn-submit {
+            background: #005bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn-submit:disabled { background: #aac4f0; cursor: not-allowed; }
+        .success-message { display: none; text-align: center; padding: 20px; }
+        .success-message h3 { color: #2e7d32; margin-bottom: 10px; }
+
         .banned-message { display: none; text-align: center; padding: 60px 20px; color: red; font-size: 20px; }
 
-        .similar-section { margin: 20px auto 40px; max-width: 700px; width: 90%; }
+        .similar-section { max-width: 700px; margin: 0 auto 40px; width: 90%; }
         .similar-section h3 { font-size: 18px; margin-bottom: 12px; }
         .similar-list { display: flex; gap: 12px; overflow-x: auto; }
         .similar-item { flex: 0 0 100px; text-align: center; text-decoration: none; color: inherit; }
         .similar-item img { width: 64px; height: 64px; object-fit: contain; border-radius: 8px; }
         .similar-item .similar-title { font-size: 14px; }
-
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center; }
-        .modal-overlay.active { display: flex; }
-        .modal { background: #ffffff; border-radius: 12px; padding: 30px; width: 90%; max-width: 420px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); color: #001a34; }
-        .modal h2 { margin-bottom: 20px; font-size: 22px; }
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; }
-        .form-group input, .form-group input[type="file"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px; background: #fff; color: #001a34; }
-        .form-group small { color: #777; }
-        .error { color: #d32f2f; font-size: 14px; margin-top: 4px; display: none; }
-        .btn-submit { background: #005bff; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: 600; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 10px; }
-        .btn-submit:disabled { background: #aac4f0; cursor: not-allowed; }
-        .success-message { display: none; text-align: center; padding: 30px; }
-        .success-message h3 { color: #2e7d32; margin-bottom: 10px; }
-        .btn-close { background: #eee; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; margin-top: 15px; }
 
         @media (max-width: 600px) {
             .product-section {
@@ -147,13 +148,9 @@
             <div class="product-icon" id="productIcon"></div>
             <div class="product-details" id="productDetails"></div>
         </div>
-        <div id="similarContainer" class="similar-section"></div>
-    </div>
 
-    <!-- Модальное окно заказа -->
-    <div class="modal-overlay" id="orderModal">
-        <div class="modal">
-            <h2>Оформление заказа</h2>
+        <!-- Форма заказа прямо на странице -->
+        <div class="order-form-container" id="orderFormContainer">
             <div id="orderForm">
                 <div class="form-group">
                     <label>Ваш ник в Minecraft</label>
@@ -176,9 +173,10 @@
             <div class="success-message" id="successMessage">
                 <h3>✅ Заказ отправлен!</h3>
                 <p>Мы скоро свяжемся с вами.</p>
-                <button class="btn-close" onclick="closeModal()">Закрыть</button>
             </div>
         </div>
+
+        <div id="similarContainer" class="similar-section"></div>
     </div>
 
     <script>
@@ -250,7 +248,7 @@
                 <div class="product-desc">${product.desc}</div>
                 <button class="order-btn" id="openOrderBtn">Заказать</button>
             `;
-            document.getElementById('openOrderBtn').addEventListener('click', openModal);
+            document.getElementById('openOrderBtn').addEventListener('click', showOrderForm);
 
             const similar = products.filter(p => p.id !== product.id && p.category === product.category);
             const similarContainer = document.getElementById('similarContainer');
@@ -273,12 +271,18 @@
             }
         }
 
+        function showOrderForm() {
+            document.getElementById('orderFormContainer').classList.add('active');
+            document.getElementById('orderFormContainer').scrollIntoView({ behavior: 'smooth' });
+            // Скрываем кнопку, чтобы не дублировать
+            document.getElementById('openOrderBtn').style.display = 'none';
+        }
+
         checkBan().then(access => {
             if (access) renderProduct();
         });
 
-        // Модальное окно
-        const modal = document.getElementById('orderModal');
+        // Логика формы заказа
         const nickInput = document.getElementById('nickname');
         const coordsInput = document.getElementById('coords');
         const fileInput = document.getElementById('screenshot');
@@ -286,18 +290,9 @@
         const successDiv = document.getElementById('successMessage');
         const formDiv = document.getElementById('orderForm');
 
-        function openModal() { modal.classList.add('active'); resetForm(); }
-        function closeModal() { modal.classList.remove('active'); resetForm(); }
-        window.closeModal = closeModal;
-
-        function resetForm() {
-            nickInput.value = ''; coordsInput.value = ''; fileInput.value = '';
-            document.querySelectorAll('.error').forEach(e => e.style.display = 'none');
-            formDiv.style.display = 'block'; successDiv.style.display = 'none';
-        }
-
         const nickRegex = /^[A-Za-z0-9]{4,}$/;
         const coordRegex = /^-?\d+(\.\d+)?\s+-?\d+(\.\d+)?\s+-?\d+(\.\d+)?$/;
+
         function validate() {
             let valid = true;
             document.getElementById('nickError').style.display = nickRegex.test(nickInput.value.trim()) ? 'none' : 'block';
@@ -352,8 +347,6 @@
                 submitBtn.textContent = 'Отправить заказ';
             }
         });
-
-        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
     </script>
 </body>
 </html>
