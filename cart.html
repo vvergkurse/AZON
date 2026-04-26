@@ -98,7 +98,7 @@
                     <input type="file" id="screenshot" accept="image/*">
                     <div class="error" id="fileError">Прикрепите скриншот</div>
                 </div>
-                <!-- Математическая капча -->
+                <!-- Капча -->
                 <div class="form-group">
                     <label id="captchaQuestion"></label>
                     <input type="text" id="captchaAnswer" placeholder="Ответ">
@@ -121,6 +121,7 @@
     <script>
         const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1484810417090990130/YA4PHS-SvKAgh8RcZtyR0fbCYtNVqTTPyrz0Z-4r35hJY9YdycImhKXM_49UE3LzaRDo';
 
+        // Тема
         const themeToggle = document.getElementById('themeToggle');
         const html = document.documentElement;
         function applyTheme(theme) {
@@ -150,7 +151,7 @@
         const captchaNum1 = Math.floor(Math.random() * 10) + 1;
         const captchaNum2 = Math.floor(Math.random() * 10) + 1;
         const correctAnswer = captchaNum1 + captchaNum2;
-        document.getElementById('captchaQuestion').textContent = `Сколько будет ${captchaNum1} + ${captchaNum2} ?`;
+        document.getElementById('captchaQuestion').textContent = `Сколько будет ${captchaNum1} + ${captchaNum2}?`;
 
         function saveCart() { localStorage.setItem('azon-cart', JSON.stringify(cart)); }
 
@@ -199,10 +200,14 @@
             document.getElementById('nickError').style.display = nickRegex.test(nickInput.value.trim()) ? 'none' : 'block';
             document.getElementById('coordError').style.display = coordRegex.test(coordsInput.value.trim()) ? 'none' : 'block';
             document.getElementById('fileError').style.display = (fileInput.files.length && fileInput.files[0].type.startsWith('image/')) ? 'none' : 'block';
-            // капча
-            const captchaAnswer = document.getElementById('captchaAnswer').value.trim();
-            document.getElementById('captchaError').style.display = (captchaAnswer && parseInt(captchaAnswer) === correctAnswer) ? 'none' : 'block';
-            if (!worldInput.value.trim() || !nickRegex.test(nickInput.value.trim()) || !coordRegex.test(coordsInput.value.trim()) || !fileInput.files.length || parseInt(captchaAnswer) !== correctAnswer) valid = false;
+
+            // Валидация капчи
+            const captchaInput = document.getElementById('captchaAnswer');
+            const isCaptchaValid = parseInt(captchaInput.value.trim()) === correctAnswer;
+            document.getElementById('captchaError').style.display = isCaptchaValid ? 'none' : 'block';
+            if (!isCaptchaValid) valid = false;
+
+            if (!worldInput.value.trim() || !nickRegex.test(nickInput.value.trim()) || !coordRegex.test(coordsInput.value.trim()) || !fileInput.files.length || !isCaptchaValid) valid = false;
             submitBtn.disabled = !valid;
         }
         worldInput.addEventListener('input', validate);
@@ -238,7 +243,11 @@
         }
 
         submitBtn.addEventListener('click', async () => {
-            if (!worldInput.value.trim() || !nickRegex.test(nickInput.value.trim()) || !coordRegex.test(coordsInput.value.trim()) || !fileInput.files.length || parseInt(document.getElementById('captchaAnswer').value.trim()) !== correctAnswer) return;
+            if (!worldInput.value.trim() || !nickRegex.test(nickInput.value.trim()) || !coordRegex.test(coordsInput.value.trim()) || !fileInput.files.length) return;
+            if (parseInt(document.getElementById('captchaAnswer').value.trim()) !== correctAnswer) {
+                document.getElementById('captchaError').style.display = 'block';
+                return;
+            }
             submitBtn.disabled = true;
             submitBtn.textContent = 'Отправка...';
             try {
