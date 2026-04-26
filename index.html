@@ -41,18 +41,15 @@
             width: 17px; height: 17px;
             stroke: #005bff; fill: none; stroke-width: 2;
         }
-        .cart-link {
+        .cart-link, .jobs-link {
             display: flex; align-items: center; color: #ffffff; text-decoration: none;
-            position: relative;
+            font-size: 16px; font-weight: 500; gap: 4px;
         }
-        .cart-link svg {
-            width: 24px; height: 24px; fill: none; stroke: #ffffff; stroke-width: 2;
-        }
+        .cart-link svg { width: 24px; height: 24px; fill: none; stroke: #ffffff; stroke-width: 2; }
         .cart-count {
             background: #ffffff; color: #005bff; font-size: 12px; font-weight: bold;
-            border-radius: 50%; width: 20px; height: 20px; display: flex;
-            align-items: center; justify-content: center;
-            position: absolute; top: -8px; right: -12px;
+            border-radius: 50%; min-width: 20px; height: 20px; display: flex;
+            align-items: center; justify-content: center; padding: 0 3px;
         }
         .theme-toggle { position: relative; display: inline-block; width: 52px; height: 26px; }
         .theme-toggle input { opacity: 0; width: 0; height: 0; }
@@ -94,6 +91,7 @@
                 </svg>
                 <span id="cartCount" class="cart-count" style="display: none;">0</span>
             </a>
+            <a href="jobs.html" class="jobs-link">💼 Вакансии</a>
             <label class="theme-toggle">
                 <input type="checkbox" id="themeToggle">
                 <span class="slider"></span>
@@ -113,6 +111,9 @@
         if (savedTheme) applyTheme(savedTheme);
         else applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         themeToggle.addEventListener('change', () => applyTheme(themeToggle.checked ? 'dark' : 'light'));
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (!localStorage.getItem('azon-theme')) applyTheme(e.matches ? 'dark' : 'light');
+        });
 
         const products = [
             { id: 1, title: 'Слитки незерита', price: 20, imageUrl: 'images/netherite_ingot.png', category: 'Материалы' },
