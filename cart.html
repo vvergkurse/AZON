@@ -7,8 +7,8 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23005bff' stroke-width='2'><path d='M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6z'/><line x1='3' y1='6' x2='21' y2='6'/><path d='M16 10a4 4 0 0 1-8 0'/></svg>">
     <style>
-        :root { --bg: #f5f5f5; --text: #001a34; --primary: #005bff; --danger: #d32f2f; --border: #ddd; }
-        [data-theme="dark"] { --bg: #1a1a2e; --text: #e0e0e0; --primary: #3f8efc; --danger: #ff5252; --border: #2a2a4a; }
+        :root { --bg: #f9f9fb; --text: #191c24; --surface: #ffffff; --primary: #005bff; --primary-hover: #0047cc; --danger: #e53935; --border: #e0e4ea; --shadow: 0 4px 12px rgba(0,0,0,0.04); }
+        [data-theme="dark"] { --bg: #1a1a2e; --text: #d0d0e0; --surface: #222240; --primary: #4f8cff; --primary-hover: #6ba0ff; --danger: #ff5252; --border: #33335a; --shadow: 0 4px 12px rgba(0,0,0,0.25); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
         .header { background: #005bff; padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; }
@@ -22,35 +22,57 @@
         input:checked + .slider { background: #0f3460; }
         input:checked + .slider:before { transform: translateX(26px); background: #f5f5f5; }
 
-        .container { max-width: 600px; margin: 30px auto; width: 90%; }
-        h1 { font-size: 24px; font-weight: 600; margin-bottom: 20px; }
+        .container { max-width: 680px; margin: 30px auto; width: 90%; }
+        h1 { font-size: 26px; font-weight: 600; margin-bottom: 24px; }
 
-        .cart-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-        .cart-item:last-child { border-bottom: none; }
-        .cart-item img { width: 48px; height: 48px; object-fit: contain; }
+        .cart-item {
+            background: var(--surface); border-radius: 10px; box-shadow: var(--shadow);
+            padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center;
+            gap: 14px; transition: transform 0.15s;
+        }
+        .cart-item:hover { transform: translateX(4px); }
+        .cart-item img { width: 52px; height: 52px; object-fit: contain; border-radius: 8px; }
         .cart-item-info { flex: 1; }
-        .cart-item-title { font-size: 16px; font-weight: 500; }
-        .cart-item-price { font-size: 14px; color: var(--primary); }
-        .cart-item-actions { display: flex; align-items: center; gap: 6px; }
-        .qty-btn { background: none; border: 1px solid var(--border); color: var(--text); width: 24px; height: 24px; border-radius: 4px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .cart-item-title { font-size: 17px; font-weight: 500; }
+        .cart-item-price { font-size: 14px; color: var(--primary); margin-top: 2px; }
+        .cart-item-actions { display: flex; align-items: center; gap: 8px; }
+        .qty-btn {
+            background: none; border: 1px solid var(--border); color: var(--text);
+            width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 18px;
+            display: flex; align-items: center; justify-content: center; transition: 0.15s;
+        }
         .qty-btn:hover { border-color: var(--primary); color: var(--primary); }
-        .qty-input { width: 32px; text-align: center; border: 1px solid var(--border); border-radius: 4px; padding: 2px 4px; font-size: 14px; background: var(--bg); color: var(--text); }
-        .remove-btn { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 14px; text-decoration: underline; padding: 0; }
+        .qty-input {
+            width: 52px; height: 32px; text-align: center; border: 1px solid var(--border);
+            border-radius: 6px; padding: 4px; font-size: 16px; font-weight: 500;
+            background: var(--bg); color: var(--text);
+        }
+        .remove-btn {
+            background: none; border: none; color: var(--danger); cursor: pointer;
+            font-size: 14px; text-decoration: underline; padding: 4px 6px;
+        }
 
-        .summary { text-align: right; font-size: 18px; margin: 20px 0; font-weight: 500; }
+        .summary {
+            text-align: right; font-size: 20px; margin: 24px 0; font-weight: 500;
+            padding: 12px 16px; background: var(--surface); border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
 
-        .order-form { margin-top: 30px; }
-        .order-form h2 { font-size: 20px; margin-bottom: 15px; }
+        .order-form { margin-top: 24px; background: var(--surface); border-radius: 10px; padding: 22px; box-shadow: var(--shadow); }
+        .order-form h2 { font-size: 21px; margin-bottom: 14px; }
         .form-group { margin-bottom: 14px; }
         .form-group label { display: block; margin-bottom: 4px; font-weight: 500; }
-        .form-group input, .form-group input[type="file"] { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 15px; background: var(--bg); color: var(--text); }
+        .form-group input, .form-group input[type="file"] {
+            width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+            font-size: 15px; background: var(--bg); color: var(--text);
+        }
         .form-group small { color: #777; }
         .error { color: var(--danger); font-size: 13px; margin-top: 2px; display: none; }
-        .btn-submit { background: var(--primary); color: #fff; border: none; padding: 10px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; width: 100%; transition: opacity 0.2s; }
-        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-submit { background: var(--primary); color: #fff; border: none; padding: 12px 20px; font-size: 17px; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; transition: opacity 0.2s; }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
         .success-message { display: none; text-align: center; padding: 20px; }
         .success-message h3 { color: #2e7d32; }
-        .empty-cart { text-align: center; padding: 60px; color: var(--text); opacity: 0.6; }
+        .empty-cart { text-align: center; padding: 60px 20px; color: var(--text); opacity: 0.6; font-size: 18px; }
     </style>
 </head>
 <body>
@@ -106,7 +128,6 @@
     <script>
         const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1484810417090990130/YA4PHS-SvKAgh8RcZtyR0fbCYtNVqTTPyrz0Z-4r35hJY9YdycImhKXM_49UE3LzaRDo';
 
-        // Тема
         const themeToggle = document.getElementById('themeToggle');
         const html = document.documentElement;
         function applyTheme(theme) {
