@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Корзина — AZON</title>
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23005bff' stroke-width='2'><path d='M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6z'/><line x1='3' y1='6' x2='21' y2='6'/><path d='M16 10a4 4 0 0 1-8 0'/></svg>">
     <style>
         :root { --bg: #f9f9fb; --text: #191c24; --surface: #ffffff; --primary: #005bff; --primary-hover: #0047cc; --danger: #e53935; --border: #e0e4ea; --shadow: 0 4px 12px rgba(0,0,0,0.04); }
@@ -25,47 +24,25 @@
         .container { max-width: 680px; margin: 30px auto; width: 90%; }
         h1 { font-size: 26px; font-weight: 600; margin-bottom: 24px; }
 
-        .cart-item {
-            background: var(--surface); border-radius: 10px; box-shadow: var(--shadow);
-            padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center;
-            gap: 14px; transition: transform 0.15s;
-        }
+        .cart-item { background: var(--surface); border-radius: 10px; box-shadow: var(--shadow); padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; transition: transform 0.15s; }
         .cart-item:hover { transform: translateX(4px); }
         .cart-item img { width: 52px; height: 52px; object-fit: contain; border-radius: 8px; }
         .cart-item-info { flex: 1; }
         .cart-item-title { font-size: 17px; font-weight: 500; }
         .cart-item-price { font-size: 14px; color: var(--primary); margin-top: 2px; }
         .cart-item-actions { display: flex; align-items: center; gap: 8px; }
-        .qty-btn {
-            background: none; border: 1px solid var(--border); color: var(--text);
-            width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 18px;
-            display: flex; align-items: center; justify-content: center; transition: 0.15s;
-        }
+        .qty-btn { background: none; border: 1px solid var(--border); color: var(--text); width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: 0.15s; }
         .qty-btn:hover { border-color: var(--primary); color: var(--primary); }
-        .qty-input {
-            width: 52px; height: 32px; text-align: center; border: 1px solid var(--border);
-            border-radius: 6px; padding: 4px; font-size: 16px; font-weight: 500;
-            background: var(--bg); color: var(--text);
-        }
-        .remove-btn {
-            background: none; border: none; color: var(--danger); cursor: pointer;
-            font-size: 14px; text-decoration: underline; padding: 4px 6px;
-        }
+        .qty-input { width: 52px; height: 32px; text-align: center; border: 1px solid var(--border); border-radius: 6px; padding: 4px; font-size: 16px; font-weight: 500; background: var(--bg); color: var(--text); }
+        .remove-btn { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 14px; text-decoration: underline; padding: 4px 6px; }
 
-        .summary {
-            text-align: right; font-size: 20px; margin: 24px 0; font-weight: 500;
-            padding: 12px 16px; background: var(--surface); border-radius: 10px;
-            box-shadow: var(--shadow);
-        }
+        .summary { text-align: right; font-size: 20px; margin: 24px 0; font-weight: 500; padding: 12px 16px; background: var(--surface); border-radius: 10px; box-shadow: var(--shadow); }
 
         .order-form { margin-top: 24px; background: var(--surface); border-radius: 10px; padding: 22px; box-shadow: var(--shadow); }
         .order-form h2 { font-size: 21px; margin-bottom: 14px; }
         .form-group { margin-bottom: 14px; }
         .form-group label { display: block; margin-bottom: 4px; font-weight: 500; }
-        .form-group input, .form-group input[type="file"] {
-            width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
-            font-size: 15px; background: var(--bg); color: var(--text);
-        }
+        .form-group input, .form-group input[type="file"] { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; background: var(--bg); color: var(--text); }
         .form-group small { color: #777; }
         .error { color: var(--danger); font-size: 13px; margin-top: 2px; display: none; }
         .btn-submit { background: var(--primary); color: #fff; border: none; padding: 12px 20px; font-size: 17px; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; transition: opacity 0.2s; }
@@ -73,6 +50,11 @@
         .success-message { display: none; text-align: center; padding: 20px; }
         .success-message h3 { color: #2e7d32; }
         .empty-cart { text-align: center; padding: 60px 20px; color: var(--text); opacity: 0.6; font-size: 18px; }
+
+        .orders-history { margin-top: 40px; }
+        .orders-history h2 { font-size: 20px; margin-bottom: 12px; }
+        .order-card { background: var(--surface); border-radius: 8px; padding: 12px 16px; margin-bottom: 10px; box-shadow: var(--shadow); }
+        .order-meta { display: flex; justify-content: space-between; font-size: 14px; color: var(--text); opacity: 0.7; }
     </style>
 </head>
 <body>
@@ -116,12 +98,23 @@
                     <input type="file" id="screenshot" accept="image/*">
                     <div class="error" id="fileError">Прикрепите скриншот</div>
                 </div>
+                <!-- Математическая капча -->
+                <div class="form-group">
+                    <label id="captchaQuestion"></label>
+                    <input type="text" id="captchaAnswer" placeholder="Ответ">
+                    <div class="error" id="captchaError">Неверный ответ</div>
+                </div>
                 <button class="btn-submit" id="submitOrder" disabled>Отправить заказ</button>
             </div>
             <div class="success-message" id="successMessage">
                 <h3>✅ Заказ отправлен!</h3>
                 <p>Мы скоро свяжемся с вами.</p>
             </div>
+        </div>
+
+        <div class="orders-history" id="ordersHistory">
+            <h2>История заказов</h2>
+            <div id="ordersList">Пока пусто</div>
         </div>
     </div>
 
@@ -151,6 +144,13 @@
         const submitBtn = document.getElementById('submitOrder');
         const successDiv = document.getElementById('successMessage');
         const formDiv = document.getElementById('orderForm');
+        const ordersList = document.getElementById('ordersList');
+
+        // Генерация капчи
+        const captchaNum1 = Math.floor(Math.random() * 10) + 1;
+        const captchaNum2 = Math.floor(Math.random() * 10) + 1;
+        const correctAnswer = captchaNum1 + captchaNum2;
+        document.getElementById('captchaQuestion').textContent = `Сколько будет ${captchaNum1} + ${captchaNum2} ?`;
 
         function saveCart() { localStorage.setItem('azon-cart', JSON.stringify(cart)); }
 
@@ -199,32 +199,75 @@
             document.getElementById('nickError').style.display = nickRegex.test(nickInput.value.trim()) ? 'none' : 'block';
             document.getElementById('coordError').style.display = coordRegex.test(coordsInput.value.trim()) ? 'none' : 'block';
             document.getElementById('fileError').style.display = (fileInput.files.length && fileInput.files[0].type.startsWith('image/')) ? 'none' : 'block';
-            if (!worldInput.value.trim() || !nickRegex.test(nickInput.value.trim()) || !coordRegex.test(coordsInput.value.trim()) || !fileInput.files.length) valid = false;
+            // капча
+            const captchaAnswer = document.getElementById('captchaAnswer').value.trim();
+            document.getElementById('captchaError').style.display = (captchaAnswer && parseInt(captchaAnswer) === correctAnswer) ? 'none' : 'block';
+            if (!worldInput.value.trim() || !nickRegex.test(nickInput.value.trim()) || !coordRegex.test(coordsInput.value.trim()) || !fileInput.files.length || parseInt(captchaAnswer) !== correctAnswer) valid = false;
             submitBtn.disabled = !valid;
         }
         worldInput.addEventListener('input', validate);
         nickInput.addEventListener('input', validate);
         coordsInput.addEventListener('input', validate);
         fileInput.addEventListener('change', validate);
+        document.getElementById('captchaAnswer').addEventListener('input', validate);
         validate();
 
+        // Сохранение заказа в историю
+        function saveOrder(orderData) {
+            const orders = JSON.parse(localStorage.getItem('azon-orders') || '[]');
+            orders.push(orderData);
+            localStorage.setItem('azon-orders', JSON.stringify(orders));
+        }
+
+        function loadOrderHistory() {
+            const orders = JSON.parse(localStorage.getItem('azon-orders') || '[]');
+            if (orders.length === 0) {
+                ordersList.innerHTML = '<p>Пока пусто</p>';
+                return;
+            }
+            ordersList.innerHTML = orders.slice().reverse().map(order => `
+                <div class="order-card">
+                    <div>Мир: ${order.world} | Ник: ${order.nick}</div>
+                    <div>Товары: ${order.items.map(i => `${i.title} x${i.qty}`).join(', ')}</div>
+                    <div class="order-meta">
+                        <span>Сумма: ${order.total} АР</span>
+                        <span>${new Date(order.date).toLocaleString()}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
         submitBtn.addEventListener('click', async () => {
-            if (!worldInput.value.trim() || !nickRegex.test(nickInput.value.trim()) || !coordRegex.test(coordsInput.value.trim()) || !fileInput.files.length) return;
+            if (!worldInput.value.trim() || !nickRegex.test(nickInput.value.trim()) || !coordRegex.test(coordsInput.value.trim()) || !fileInput.files.length || parseInt(document.getElementById('captchaAnswer').value.trim()) !== correctAnswer) return;
             submitBtn.disabled = true;
             submitBtn.textContent = 'Отправка...';
             try {
                 const ipRes = await fetch('https://api.ipify.org?format=json');
                 const ip = (await ipRes.json()).ip;
 
-                const itemsList = cart.map(item => `• ${item.title} ×${item.quantity} (${item.price * item.quantity} АР)`).join('\n');
-                const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+                const itemsList = cart.map(item => ({
+                    title: item.title,
+                    qty: item.quantity,
+                    total: item.price * item.quantity
+                }));
+                const total = itemsList.reduce((sum, i) => sum + i.total, 0);
+
+                // Сохраняем заказ
+                saveOrder({
+                    world: worldInput.value.trim(),
+                    nick: nickInput.value.trim(),
+                    coords: coordsInput.value.trim(),
+                    items: itemsList,
+                    total,
+                    date: Date.now()
+                });
 
                 const embed = {
                     title: '🛒 Новый заказ!',
                     color: 0x005bff,
                     fields: [
                         { name: 'Мир', value: worldInput.value.trim(), inline: false },
-                        { name: 'Товары', value: itemsList, inline: false },
+                        { name: 'Товары', value: itemsList.map(i => `• ${i.title} ×${i.qty} (${i.total} АР)`).join('\n'), inline: false },
                         { name: 'Общая сумма', value: `${total} АР`, inline: false },
                         { name: 'Ник', value: `\`${nickInput.value.trim()}\``, inline: true },
                         { name: 'Координаты', value: `\`${coordsInput.value.trim()}\``, inline: true },
@@ -245,6 +288,7 @@
                     successDiv.style.display = 'block';
                     cart = [];
                     renderCart();
+                    loadOrderHistory(); // обновить историю
                 } else {
                     alert('Ошибка отправки. Попробуйте позже.');
                 }
@@ -258,6 +302,7 @@
         });
 
         renderCart();
+        loadOrderHistory();
     </script>
 </body>
 </html>
