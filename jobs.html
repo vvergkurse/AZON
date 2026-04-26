@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вакансии — AZON</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23005bff' stroke-width='2'><path d='M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6z'/><line x1='3' y1='6' x2='21' y2='6'/><path d='M16 10a4 4 0 0 1-8 0'/></svg>">
+    <style>
+        :root { --bg: #f5f5f5; --text: #001a34; --surface: #ffffff; --primary: #005bff; --primary-hover: #0047cc; --border: #e0e4ea; --shadow: 0 4px 12px rgba(0,0,0,0.04); }
+        [data-theme="dark"] { --bg: #1a1a2e; --text: #e0e0e0; --surface: #16213e; --primary: #3f8efc; --primary-hover: #5aa0ff; --border: #2a2a4a; --shadow: 0 4px 12px rgba(0,0,0,0.25); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
+        .header { background: #005bff; padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-size: 36px; font-weight: 700; color: #fff; letter-spacing: 4px; text-decoration: none; text-transform: uppercase; }
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        .back-link { color: #fff; text-decoration: none; font-size: 16px; }
+        .theme-toggle { position: relative; display: inline-block; width: 52px; height: 26px; }
+        .theme-toggle input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #fff; transition: 0.3s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background: #005bff; transition: 0.3s; border-radius: 50%; }
+        input:checked + .slider { background: #0f3460; }
+        input:checked + .slider:before { transform: translateX(26px); background: #f5f5f5; }
+
+        .container { max-width: 700px; margin: 40px auto; width: 90%; }
+        h1 { font-size: 28px; font-weight: 600; margin-bottom: 24px; }
+        .job-card { background: var(--surface); border-radius: 10px; box-shadow: var(--shadow); padding: 24px; }
+        .job-title { font-size: 22px; font-weight: 600; color: var(--primary); margin-bottom: 12px; }
+        .job-desc { font-size: 16px; line-height: 1.6; margin-bottom: 16px; }
+        .job-details { margin-bottom: 16px; }
+        .job-details h3 { font-size: 18px; margin-bottom: 6px; }
+        .job-details ul { list-style: disc; padding-left: 20px; }
+        .job-details li { margin-bottom: 4px; }
+        .reward { font-size: 17px; font-weight: 500; color: #2e7d32; margin-bottom: 20px; }
+        .discord-btn { display: inline-block; background: #5865F2; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 500; transition: background 0.2s; }
+        .discord-btn:hover { background: #4752C4; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="logo">AZON</a>
+        <div class="header-right">
+            <a href="index.html" class="back-link">← В магазин</a>
+            <label class="theme-toggle">
+                <input type="checkbox" id="themeToggle"><span class="slider"></span>
+            </label>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Вакансии</h1>
+        <div class="job-card">
+            <div class="job-title">🚚 Курьер (доставщик товаров)</div>
+            <div class="job-desc">Ищем активных игроков для доставки заказов клиентам AZON. Твоя задача — быстро и безопасно доставлять предметы в разные миры сервера.</div>
+            <div class="job-details">
+                <h3>Условия:</h3>
+                <ul>
+                    <li>Предоставляем элитры для доставок</li>
+                    <li>Доступ к ферме золота, ферме пороха и ферме тростника</li>
+                    <li>Оплата 20% с цены заказа, а также цена за доставку полностью ваша</li>
+                    <li>Повышение по должности, возможность вступить в команду при отличных результатах</li>
+                </ul>
+                <h3>Обязанности:</h3>
+                <ul>
+                    <li>Делать 10 заказов в неделю (при их наличии)</li>
+                    <li>Добросовестно выполнять обязанности по доставке товара</li>
+                    <li>Не пытаться обмануть клиента или организацию AZON</li>
+                    <li>Не пользоваться складом без веской причины (заказ, разрешение члена организации)</li>
+                </ul>
+            </div>
+            <div class="reward">💰 Оплата: 20% от стоимости заказа + полная цена доставки</div>
+            <a href="https://discord.gg/Ya45ahZBGj" class="discord-btn" target="_blank">Присоединиться в Discord</a>
+            <p style="margin-top:12px; font-size:14px; opacity:0.7;">Откликайся в канале #вакансии на нашем сервере</p>
+        </div>
+    </div>
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        function applyTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            themeToggle.checked = (theme === 'dark');
+            localStorage.setItem('azon-theme', theme);
+        }
+        const savedTheme = localStorage.getItem('azon-theme');
+        if (savedTheme) applyTheme(savedTheme);
+        else applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        themeToggle.addEventListener('change', () => applyTheme(themeToggle.checked ? 'dark' : 'light'));
+    </script>
+</body>
+</html>
