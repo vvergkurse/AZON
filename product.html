@@ -45,12 +45,11 @@
         .similar-item img { width: 64px; height: 64px; object-fit: contain; border-radius: 8px; }
         .similar-item .similar-title { font-size: 14px; }
 
-        /* Тосты */
-        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { background: #4caf50; color: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px; font-size: 16px; transform: translateX(120%); animation: slideIn 0.3s forwards, fadeOut 0.3s 2.2s forwards; }
-        .toast.error { background: #e53935; }
-        @keyframes slideIn { to { transform: translateX(0); } }
-        @keyframes fadeOut { to { opacity: 0; } }
+        /* Тост уведомления — перемещён в левый нижний угол */
+        .toast-container { position: fixed; bottom: 20px; left: 20px; z-index: 9999; display: flex; flex-direction: column-reverse; gap: 10px; }
+        .toast { background: #4caf50; color: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px; font-size: 16px; transform: translateY(100px); opacity: 0; animation: slideUp 0.3s forwards, fadeOut 0.3s 2.2s forwards; }
+        @keyframes slideUp { to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(100px); } }
 
         @media (max-width: 600px) {
             .product-section { flex-direction: column; align-items: center; padding: 20px; gap: 20px; }
@@ -139,7 +138,6 @@
         const productId = parseInt(urlParams.get('id'));
         const product = products.find(p => p.id === productId);
 
-        // Управление корзиной и тостами
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem('azon-cart') || '[]');
             const total = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -180,16 +178,6 @@
             showToast('Товар добавлен в корзину');
         }
 
-        // Кнопка «Поделиться»
-        function shareProduct() {
-            const url = window.location.href;
-            if (navigator.share) {
-                navigator.share({ title: product.title, text: `Смотри, что нашёл: ${product.title}`, url });
-            } else {
-                navigator.clipboard.writeText(url).then(() => showToast('Ссылка скопирована в буфер обмена'));
-            }
-        }
-
         function renderProduct() {
             if (!product) {
                 document.getElementById('normalContent').innerHTML = '<p style="text-align:center; padding:60px; color:var(--text);">Товар не найден</p>';
@@ -201,9 +189,6 @@
                 <div class="product-price">${product.price} АР</div>
                 <div class="product-desc">${product.desc}</div>
                 <button class="add-to-cart-btn" id="addToCartBtn">Добавить в корзину</button>
-                <button class="add-to-cart-btn" style="background: #6c757d; margin-top: 8px;" onclick="shareProduct()">
-                    📤 Поделиться
-                </button>
             `;
             document.getElementById('addToCartBtn').addEventListener('click', addToCart);
 
