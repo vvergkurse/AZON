@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Товар — AZON</title>
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23005bff' stroke-width='2'><path d='M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6z'/><line x1='3' y1='6' x2='21' y2='6'/><path d='M16 10a4 4 0 0 1-8 0'/></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
@@ -16,13 +15,8 @@
         .logo { font-size: 36px; font-weight: 700; color: #fff; letter-spacing: 4px; text-decoration: none; text-transform: uppercase; }
         .header-right { display: flex; align-items: center; gap: 20px; }
         .back-link, .cart-link { color: #fff; text-decoration: none; font-size: 16px; font-weight: 500; display: flex; align-items: center; gap: 4px; }
-        .back-link:hover, .cart-link:hover { opacity: 0.8; }
         .cart-link svg { width: 24px; height: 24px; fill: none; stroke: #fff; stroke-width: 2; }
-        .cart-count {
-            background: #fff; color: #005bff; font-size: 12px; font-weight: bold;
-            border-radius: 50%; width: 20px; height: 20px; display: flex;
-            align-items: center; justify-content: center; margin-left: 4px;
-        }
+        .cart-count { background: #fff; color: #005bff; font-size: 12px; font-weight: bold; border-radius: 50%; min-width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; margin-left: 4px; padding: 0 3px; }
         .theme-toggle { position: relative; display: inline-block; width: 52px; height: 26px; }
         .theme-toggle input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #fff; transition: 0.3s; border-radius: 34px; }
@@ -30,45 +24,16 @@
         input:checked + .slider { background: #0f3460; }
         input:checked + .slider:before { transform: translateX(26px); background: #f5f5f5; }
 
-        .product-section {
-            max-width: 700px;
-            margin: 40px auto 20px;
-            width: 90%;
-            background: var(--surface);
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            padding: 30px;
-            gap: 30px;
-        }
-        .product-icon {
-            width: 200px;
-            height: 200px;
-            background: #f8f8f8;
-            border-radius: 12px;
-            border: 3px solid var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
+        .product-section { max-width: 700px; margin: 40px auto 20px; width: 90%; background: var(--surface); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); display: flex; flex-direction: row; align-items: flex-start; padding: 30px; gap: 30px; }
+        .product-icon { width: 200px; height: 200px; background: #f8f8f8; border-radius: 12px; border: 3px solid var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .product-icon img { max-width: 70%; max-height: 70%; object-fit: contain; }
         .product-details { flex: 1; display: flex; flex-direction: column; justify-content: center; }
         .product-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
         .product-price { font-size: 32px; font-weight: 700; color: var(--primary); margin-bottom: 12px; }
         .product-desc { font-size: 17px; color: var(--text); line-height: 1.6; margin-bottom: 24px; }
         .add-to-cart-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            font-size: 18px;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
+            background: var(--primary); color: white; border: none; padding: 14px 28px;
+            font-size: 18px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: background 0.2s;
             width: 100%;
         }
         .add-to-cart-btn:hover { background: var(--primary-hover); }
@@ -79,6 +44,13 @@
         .similar-item { flex: 0 0 100px; text-align: center; text-decoration: none; color: inherit; }
         .similar-item img { width: 64px; height: 64px; object-fit: contain; border-radius: 8px; }
         .similar-item .similar-title { font-size: 14px; }
+
+        /* Тосты */
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: #4caf50; color: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px; font-size: 16px; transform: translateX(120%); animation: slideIn 0.3s forwards, fadeOut 0.3s 2.2s forwards; }
+        .toast.error { background: #e53935; }
+        @keyframes slideIn { to { transform: translateX(0); } }
+        @keyframes fadeOut { to { opacity: 0; } }
 
         @media (max-width: 600px) {
             .product-section { flex-direction: column; align-items: center; padding: 20px; gap: 20px; }
@@ -114,6 +86,8 @@
         </div>
         <div id="similarContainer" class="similar-section"></div>
     </div>
+
+    <div class="toast-container" id="toastContainer"></div>
 
     <script>
         // Тема
@@ -165,6 +139,7 @@
         const productId = parseInt(urlParams.get('id'));
         const product = products.find(p => p.id === productId);
 
+        // Управление корзиной и тостами
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem('azon-cart') || '[]');
             const total = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -175,6 +150,15 @@
             } else {
                 countEl.style.display = 'none';
             }
+        }
+
+        function showToast(message, isError = false) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast' + (isError ? ' error' : '');
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
         }
 
         function addToCart() {
@@ -193,7 +177,17 @@
             }
             localStorage.setItem('azon-cart', JSON.stringify(cart));
             updateCartCount();
-            // Никакого alert, просто остаёмся на странице
+            showToast('Товар добавлен в корзину');
+        }
+
+        // Кнопка «Поделиться»
+        function shareProduct() {
+            const url = window.location.href;
+            if (navigator.share) {
+                navigator.share({ title: product.title, text: `Смотри, что нашёл: ${product.title}`, url });
+            } else {
+                navigator.clipboard.writeText(url).then(() => showToast('Ссылка скопирована в буфер обмена'));
+            }
         }
 
         function renderProduct() {
@@ -207,6 +201,9 @@
                 <div class="product-price">${product.price} АР</div>
                 <div class="product-desc">${product.desc}</div>
                 <button class="add-to-cart-btn" id="addToCartBtn">Добавить в корзину</button>
+                <button class="add-to-cart-btn" style="background: #6c757d; margin-top: 8px;" onclick="shareProduct()">
+                    📤 Поделиться
+                </button>
             `;
             document.getElementById('addToCartBtn').addEventListener('click', addToCart);
 
