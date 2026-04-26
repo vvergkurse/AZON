@@ -116,8 +116,6 @@
     </div>
 
     <script>
-        const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1484810417090990130/YA4PHS-SvKAgh8RcZtyR0fbCYtNVqTTPyrz0Z-4r35hJY9YdycImhKXM_49UE3LzaRDo';
-
         // Тема
         const themeToggle = document.getElementById('themeToggle');
         const html = document.documentElement;
@@ -130,9 +128,6 @@
         if (savedTheme) applyTheme(savedTheme);
         else applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         themeToggle.addEventListener('change', () => applyTheme(themeToggle.checked ? 'dark' : 'light'));
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            if (!localStorage.getItem('azon-theme')) applyTheme(e.matches ? 'dark' : 'light');
-        });
 
         async function checkBan() {
             try {
@@ -198,8 +193,7 @@
             }
             localStorage.setItem('azon-cart', JSON.stringify(cart));
             updateCartCount();
-            alert(`${product.title} добавлен в корзину!`);
-            window.location.href = 'cart.html';
+            // Никакого alert, просто остаёмся на странице
         }
 
         function renderProduct() {
